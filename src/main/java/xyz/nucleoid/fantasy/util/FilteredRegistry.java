@@ -2,6 +2,7 @@ package xyz.nucleoid.fantasy.util;
 
 import com.google.common.collect.Iterators;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
@@ -95,7 +96,7 @@ public class FilteredRegistry<T> extends Registry<T> {
         return set;
     }
 
-    @Override
+    //@Override
     public Optional<RegistryEntry<T>> getRandom(Random random) {
         return this.getRandom(random);
     }
@@ -179,5 +180,23 @@ public class FilteredRegistry<T> extends Registry<T> {
     @Override
     public Iterator<T> iterator() {
         return Iterators.filter(this.source.iterator(), e -> this.check.test(e));
+    }
+
+    @Override
+    public Set<RegistryKey<T>> getKeys() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public DataResult<RegistryEntry<T>> getOrCreateEntryDataResult(RegistryKey<T> key) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Optional<RegistryEntry<T>> getRandom(net.minecraft.util.math.random.Random random) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }
