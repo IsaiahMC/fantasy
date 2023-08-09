@@ -4,6 +4,8 @@ import com.mojang.serialization.Lifecycle;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
+import net.minecraft.util.ProgressListener;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.util.registry.SimpleRegistry;
@@ -32,6 +34,7 @@ final class RuntimeWorldManager {
         if (style == RuntimeWorld.Style.TEMPORARY) {
             ((FantasyDimensionOptions) (Object) options).fantasy$setSave(false);
         }
+        ((FantasyDimensionOptions) (Object) options).fantasy$setSaveProperties(false);
 
         SimpleRegistry<DimensionOptions> dimensionsRegistry = getDimensionsRegistry(this.server);
         boolean isFrozen = ((RemoveFromRegistry<?>) dimensionsRegistry).fantasy$isFrozen();
@@ -75,6 +78,34 @@ final class RuntimeWorldManager {
                     }
                 }
             }
+        }
+    }
+
+    void unload(ServerWorld world) {
+        RegistryKey<World> dimensionKey = world.getRegistryKey();
+
+        if (this.serverAccess.getWorlds().remove(dimensionKey, world)) {
+            world.save(new ProgressListener() {
+                @Override
+                public void setTitle(Text title) {}
+
+                @Override
+                public void setTitleAndTask(Text title) {}
+
+                @Override
+                public void setTask(Text task) {}
+
+                @Override
+                public void progressStagePercentage(int percentage) {}
+
+                @Override
+                public void setDone() {
+                    ServerWorldEvents.UNLOAD.invoker().onWorldUnload(RuntimeWorldManager.this.server, world);
+
+                    SimpleRegistry<DimensionOptions> dimensionsRegistry = getDimensionsRegistry(RuntimeWorldManager.this.server);
+                    RemoveFromRegistry.remove(dimensionsRegistry, dimensionKey.getValue());
+                }
+            }, true, false);
         }
     }
 

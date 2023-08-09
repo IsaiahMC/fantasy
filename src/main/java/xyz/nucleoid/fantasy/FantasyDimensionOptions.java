@@ -6,7 +6,10 @@ import java.util.function.Predicate;
 
 public interface FantasyDimensionOptions {
     Predicate<DimensionOptions> SAVE_PREDICATE = (e) -> ((FantasyDimensionOptions) (Object) e).fantasy$getSave();
+    Predicate<DimensionOptions> SAVE_PROPERTIES_PREDICATE = (e) -> ((FantasyDimensionOptions) (Object) e).fantasy$getSaveProperties();
 
     void fantasy$setSave(boolean value);
     boolean fantasy$getSave();
+    void fantasy$setSaveProperties(boolean value);
+    boolean fantasy$getSaveProperties();
 }
