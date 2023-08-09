@@ -32,6 +32,11 @@ class RuntimeWorld extends ServerWorld {
     }
 
     @Override
+    public long getSeed() {
+        return ((RuntimeWorldProperties) this.properties).config.getSeed();
+    }
+
+    @Override
     public void save(@Nullable ProgressListener progressListener, boolean flush, boolean enabled) {
         if (this.style == Style.PERSISTENT || !flush) {
             super.save(progressListener, flush, enabled);
